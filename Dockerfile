@@ -2,7 +2,7 @@ FROM alpine:latest
 
 LABEL AUTHOR=huangzulin<33588264@qq.com>
 
-RUN apk update && pk add --no-cache unzip wget curl
+RUN apk update && apk add --no-cache unzip wget curl
 
 RUN curl https://getcaddy.com | sh -s personal
 
