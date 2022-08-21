@@ -1,12 +1,13 @@
 FROM alpine:latest
 
-LABEL AUTHOR=huangzulin<33588264@qq.com>
+LABEL AUTHOR=huangzulin<zu-lin@qq.com>
 
-RUN apk update && apk add --no-cache unzip wget curl caddy \
-	&& wget --no-check-certificate https://github.com/mayswind/AriaNg/releases/download/1.1.4/AriaNg-1.1.4-AllInOne.zip -O ariang.zip  \
-	&& unzip ariang.zip -d . \
-	&& rm -rf ariang.zip \
-    && apk del unzip wget curl
+RUN apk update && apk add --no-cache unzip wget curl darkhttpd && \
+	mkdir -p /ariang && \
+	ariang_ver=$(curl --silent https://api.github.com/repos/mayswind/AriaNg/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
+	wget --no-check-certificate https://github.com/mayswind/AriaNg/releases/download/${ariang_ver}/AriaNg-${ariang_ver}-AllInOne.zip -O ariang.zip && \
+	unzip ariang.zip -d /ariang && \
+	rm -rf ariang.zip && rm /ariang/LICENSE
+EXPOSE 80
 
-EXPOSE 2015
-ENTRYPOINT ["caddy"]
+CMD ["darkhttpd","/ariang","--port","80"]
